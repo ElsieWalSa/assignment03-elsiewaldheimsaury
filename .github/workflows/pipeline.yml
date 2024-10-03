@@ -1,14 +1,14 @@
 name: Pipeline
 on: 
   push:
-      branches:
-        -main
-        -gh-actions
+    branches: 
+      - main
+      - gh-actions
 
-  pull_requests:
-      branches:
-        -main
-
+  pull_request:
+    branches: 
+      - main
+      - gh-actions
 
 jobs:
   e2e-tests:
