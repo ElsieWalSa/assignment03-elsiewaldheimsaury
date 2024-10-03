@@ -1,11 +1,11 @@
 name: Pipeline
-on: 
-  push:
-    -main
-    -gh-actions
+  on: 
+    push:
+      -main
+      -gh-actions
 
-  pull_requests:
-    -main
+    pull_requests:
+      -main
 
 
 jobs:
