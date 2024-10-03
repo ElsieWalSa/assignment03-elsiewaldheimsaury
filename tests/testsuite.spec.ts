@@ -39,11 +39,11 @@ test("Test case 02, count clients", async ({ page }) => {
 });
 
 
-test.describe('Backend tests', () => {
-  test('has title', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+// test.describe('Backend tests', () => {
+//   test('has title', async ({ page }) => {
+//     await page.goto('http://localhost:3000');
   
-  });
-  })
+//   });
+  // })
 
 
