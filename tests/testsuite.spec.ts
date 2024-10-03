@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect, APIRequestContext, request } from '@playwright/test';
 import { generateClientData } from "./testdata";
 import { ClientPage } from './ClientPage';
 import { CounterPage } from './CounterPage';
@@ -8,6 +8,14 @@ import { LoginPage } from './login-page';
 import { DashboardPage } from './dashboard-page';
 import { generateUserData, generateRoomData, generateBillData, generateReservationData, generateDates} from './testdata'; 
 import { APIHelper } from './apiHelpers';
+
+import dotenv from 'dotenv';
+dotenv.config();
+
+
+// let apiHelper: APIHelper;
+// let xUserAuth;
+
 
 
 test.describe('Frontend tests', () => {
@@ -46,10 +54,75 @@ test("Test case 02, count clients", async ({ page }) => {
 
 
 
-// test.describe('Backend tests', () => {
-//   test('has title', async ({ page }) => {
-//     await page.goto('http://localhost:3000');
-  
-// //   });
-//   // })
+test.describe('Backend tests', () => {
 
+  let apiHelper: APIHelper;
+  let xUserAuth: { 'x-user-auth': string };
+
+  test.beforeEach(async () => {
+    apiHelper = new APIHelper(); // Initiera APIHelper här
+
+    const LOGIN_URL = 'http://localhost:3000';
+    console.log(LOGIN_URL);
+
+    // Get login
+    const loginCredentials = {
+      'username': `${process.env.LOGIN_USERNAME}`,
+      'password': `${process.env.LOGIN_PASSWORD}`
+    };
+
+    const context = await request.newContext();
+    
+    
+    const response = await context.post(LOGIN_URL, {
+      data: loginCredentials,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok()) {
+      console.error(`Login request failed with status: ${response.status()}`);
+      return; 
+    }
+
+   
+    const json = await response.json();
+    xUserAuth = {
+      'x-user-auth': `{ "username": "tester01", "token": "${json.token}" }`
+    };
+  });
+
+  test('Test case 01 - Get all roomposts - v2', async ({ request }) => {
+    
+    const roomResponse = await request.get('http://localhost:3000/api/rooms', {
+      headers: xUserAuth
+    });
+    
+    expect(roomResponse.ok()).toBeTruthy();
+    
+  
+    const roomData = await roomResponse.json();
+    console.log(roomData);
+
+    const getPosts = await apiHelper.getAllRoomPosts(request);
+    expect(getPosts.ok()).toBeTruthy(); 
+  });
+
+  test('Test case 02 - Get all clients', async ({ request }) => {
+   
+    const clientsResponse = await request.get('http://localhost:3000/api/clients', {
+      headers: xUserAuth
+    });
+    
+    expect(clientsResponse.ok()).toBeTruthy();
+
+    
+    const clientData = await clientsResponse.json();
+    console.log(clientData);
+
+    
+    const getClients = await apiHelper.getAllClients(request);
+    expect(getClients.ok()).toBeTruthy(); 
+  });
+});
