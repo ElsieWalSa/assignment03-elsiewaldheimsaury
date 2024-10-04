@@ -62,17 +62,16 @@ test.describe('Backend tests', () => {
   test.beforeEach(async () => {
     apiHelper = new APIHelper(); // Initiera APIHelper här
 
-    const LOGIN_URL = 'http://localhost:3000';
+    const LOGIN_URL = 'http://localhost:3000/api/login';
     console.log(LOGIN_URL);
 
     // Get login
     const loginCredentials = {
-      'username': `${process.env.LOGIN_USERNAME}`,
-      'password': `${process.env.LOGIN_PASSWORD}`
+      'username': `${process.env.TEST_USERNAME}`,
+      'password': `${process.env.TEST_PASSWORD}`
     };
 
     const context = await request.newContext();
-    
     
     const response = await context.post(LOGIN_URL, {
       data: loginCredentials,
@@ -86,7 +85,6 @@ test.describe('Backend tests', () => {
       return; 
     }
 
-   
     const json = await response.json();
     xUserAuth = {
       'x-user-auth': `{ "username": "tester01", "token": "${json.token}" }`
