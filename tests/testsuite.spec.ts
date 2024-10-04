@@ -12,12 +12,6 @@ import { APIHelper } from './apiHelpers';
 import dotenv from 'dotenv';
 dotenv.config();
 
-
-// let apiHelper: APIHelper;
-// let xUserAuth;
-
-
-
 test.describe('Frontend tests', () => {
  
   });
@@ -51,8 +45,6 @@ test("Test case 02, count clients", async ({ page }) => {
       await counterPage.countClients();
  
 });
-
-
 
 test.describe('Backend tests', () => {
 
