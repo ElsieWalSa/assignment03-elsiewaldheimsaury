@@ -24,9 +24,9 @@ test.describe('Frontend tests', () => {
       await page.getByRole('button', { name: 'Login' }).click();
       await expect(page.getByRole('heading', { name: 'Tester Hotel Overview' })).toBeVisible();
       await dashboardPage.performLogout();
-      await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible();
-      
+      await expect(page.getByRole('heading', { name: 'Login' })).toBeVisible();     
 });
+
 test("Test case 02, count clients", async ({ page }) => {
   const clientPage = new ClientPage(page);
   const clientData = generateClientData();
@@ -41,11 +41,8 @@ test("Test case 02, count clients", async ({ page }) => {
 
   // click on clients view
       await page.locator("#app > div > div > div:nth-child(2) > a").click();
-
-      await counterPage.countClients();
- 
+      await counterPage.countClients(); 
 });
-
 test.describe('Backend tests', () => {
 
   let apiHelper: APIHelper;
@@ -62,21 +59,17 @@ test.describe('Backend tests', () => {
       'username': `${process.env.TEST_USERNAME}`,
       'password': `${process.env.TEST_PASSWORD}`
     };
-
-    const context = await request.newContext();
-    
+    const context = await request.newContext();  
     const response = await context.post(LOGIN_URL, {
       data: loginCredentials,
       headers: {
         'Content-Type': 'application/json'
       }
     });
-
     if (!response.ok()) {
       console.error(`Login request failed with status: ${response.status()}`);
       return; 
     }
-
     const json = await response.json();
     xUserAuth = {
       'x-user-auth': `{ "username": "tester01", "token": "${json.token}" }`
@@ -91,7 +84,6 @@ test.describe('Backend tests', () => {
     
     expect(roomResponse.ok()).toBeTruthy();
     
-  
     const roomData = await roomResponse.json();
     console.log(roomData);
 
@@ -100,18 +92,12 @@ test.describe('Backend tests', () => {
   });
 
   test('Test case 02 - Get all clients', async ({ request }) => {
-   
     const clientsResponse = await request.get('http://localhost:3000/api/clients', {
       headers: xUserAuth
-    });
-    
+    }); 
     expect(clientsResponse.ok()).toBeTruthy();
-
-    
     const clientData = await clientsResponse.json();
     console.log(clientData);
-
-    
     const getClients = await apiHelper.getAllClients(request);
     expect(getClients.ok()).toBeTruthy(); 
   });
